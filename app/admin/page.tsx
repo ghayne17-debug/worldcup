@@ -137,19 +137,7 @@ export default async function AdminPage() {
 
       {/* Participants */}
       <div className="bg-[#0d1a2d] border border-[#1e3a5f] rounded-2xl p-6 mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white">Participants</h2>
-          {totalPaid > 0 && !isDrawn && (
-            <form action={doublePaidSlots}>
-              <button
-                type="submit"
-                className="text-xs px-3 py-1.5 rounded-lg bg-purple-900/50 border border-purple-700/50 text-purple-300 hover:bg-purple-800/50 transition-colors cursor-pointer"
-              >
-                ×2 Double Paid Slots
-              </button>
-            </form>
-          )}
-        </div>
+        <h2 className="text-lg font-bold text-white mb-4">Participants</h2>
 
         {participants.length === 0 ? (
           <p className="text-slate-500 text-sm">No one has registered yet.</p>
