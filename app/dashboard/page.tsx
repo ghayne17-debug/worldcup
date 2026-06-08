@@ -81,7 +81,7 @@ export default async function DashboardPage() {
           <>
             <p className="text-slate-400 text-sm mb-4">
               You haven&apos;t registered yet. Tell us how many teams you want in the draw — each costs{' '}
-              <span className="text-amber-400 font-bold">$20</span>. Pay via <span className="text-white font-semibold">PayID to Greg</span> using the description <span className="text-amber-400 font-semibold">&quot;World Cup - your favourite Cereal&quot;</span>
+              <span className="text-amber-400 font-bold">$10</span>. Pay via <span className="text-white font-semibold">PayID to Greg</span> using the description <span className="text-amber-400 font-semibold">&quot;World Cup - your favourite Cereal&quot;</span>
             </p>
             <form action={registerParticipant} className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
@@ -119,7 +119,7 @@ export default async function DashboardPage() {
                 <div className="text-xs text-slate-500 uppercase tracking-widest mt-1">Teams Wanted</div>
               </div>
               <div className="bg-[#050a14] rounded-xl p-4 border border-[#1e3a5f]/60">
-                <div className="text-2xl font-black text-white">${participant.teams_wanted * 20}</div>
+                <div className="text-2xl font-black text-white">${participant.teams_wanted * 10}</div>
                 <div className="text-xs text-slate-500 uppercase tracking-widest mt-1">Amount</div>
               </div>
               <div className="bg-[#050a14] rounded-xl p-4 border border-[#1e3a5f]/60">
@@ -132,7 +132,7 @@ export default async function DashboardPage() {
 
             {!participant.is_paid && (
               <div className="rounded-xl bg-orange-950/40 border border-orange-800/40 px-4 py-3 text-sm text-orange-300 space-y-1">
-                <div>💳 Payment pending — send <span className="font-bold">${participant.teams_wanted * 20}</span> via <span className="text-white font-semibold">PayID to Greg</span></div>
+                <div>💳 Payment pending — send <span className="font-bold">${participant.teams_wanted * 10}</span> via <span className="text-white font-semibold">PayID to Greg</span></div>
                 <div className="text-orange-400/70">Description: <span className="text-amber-400 font-semibold">&quot;World Cup - your favourite Cereal&quot;</span> 🥣</div>
               </div>
             )}

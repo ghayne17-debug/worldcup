@@ -102,7 +102,7 @@ export default async function HomePage() {
   const totalPaid = participants.filter(p => p.is_paid).length
   const teamsClaimed = participants.reduce((sum, p) => sum + (p.is_paid ? p.teams_wanted : 0), 0)
   const teamsWantedTotal = participants.reduce((sum, p) => sum + p.teams_wanted, 0)
-  const poolValue = teamsClaimed * 20
+  const poolValue = teamsClaimed * 10
 
   const groups: Record<string, Team[]> = {}
   for (const team of teams) {
@@ -175,14 +175,14 @@ export default async function HomePage() {
         <section className="mb-16">
           <h2 className="text-xl font-bold text-white mb-1 text-center">Prize Money</h2>
           <p className="text-slate-500 text-xs text-center mb-6">
-            Based on all 48 teams sold ($960 pool) — will be re-jigged at the draw if not all sold
+            Based on all 48 teams sold ($480 pool) — will be re-jigged at the draw if not all sold
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
             {[
-              { place: '1st', icon: '🥇', amount: '$460', color: 'from-amber-500/20 to-amber-600/5 border-amber-500/40 text-amber-400' },
-              { place: '2nd', icon: '🥈', amount: '$300', color: 'from-slate-400/20 to-slate-500/5 border-slate-400/40 text-slate-300' },
-              { place: '3rd', icon: '🥉', amount: '$125', color: 'from-orange-700/20 to-orange-800/5 border-orange-700/40 text-orange-400' },
-              { place: '4th', icon: '🏅', amount: '$75',  color: 'from-blue-600/20 to-blue-700/5 border-blue-600/40 text-blue-400' },
+              { place: '1st', icon: '🥇', amount: '$200', color: 'from-amber-500/20 to-amber-600/5 border-amber-500/40 text-amber-400' },
+              { place: '2nd', icon: '🥈', amount: '$150', color: 'from-slate-400/20 to-slate-500/5 border-slate-400/40 text-slate-300' },
+              { place: '3rd', icon: '🥉', amount: '$80',  color: 'from-orange-700/20 to-orange-800/5 border-orange-700/40 text-orange-400' },
+              { place: '4th', icon: '🏅', amount: '$50',  color: 'from-blue-600/20 to-blue-700/5 border-blue-600/40 text-blue-400' },
             ].map(prize => (
               <div key={prize.place} className={`bg-gradient-to-b ${prize.color} border rounded-2xl p-5 text-center`}>
                 <div className="text-4xl mb-2">{prize.icon}</div>

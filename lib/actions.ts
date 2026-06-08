@@ -153,6 +153,31 @@ export async function triggerDraw() {
   revalidatePath('/admin')
 }
 
+export async function doublePaidSlots() {
+  await assertAdmin()
+  const admin = createAdminClient()
+
+  const { data: participants } = await admin
+    .from('participants')
+    .select('user_id, teams_wanted, teams_paid')
+    .eq('is_paid', true)
+
+  if (!participants?.length) return
+
+  for (const p of participants) {
+    await admin
+      .from('participants')
+      .update({
+        teams_wanted: p.teams_wanted * 2,
+        teams_paid: p.teams_paid * 2,
+      })
+      .eq('user_id', p.user_id)
+  }
+
+  revalidatePath('/admin')
+  revalidatePath('/')
+}
+
 export async function resetDraw() {
   await assertAdmin()
   const admin = createAdminClient()

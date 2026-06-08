@@ -72,7 +72,7 @@ export default async function SignupPage({
             </div>
 
             <div className="bg-[#050a14]/60 rounded-xl border border-[#1e3a5f]/60 p-3 text-xs text-slate-400 space-y-1">
-              <div>💰 Each team costs <span className="text-amber-400 font-bold">$20</span>. You&apos;ll set how many teams you want after signing up.</div>
+              <div>💰 Each team costs <span className="text-amber-400 font-bold">$10</span>. You&apos;ll set how many teams you want after signing up.</div>
               <div>💳 Pay via <span className="text-white font-semibold">PayID to Greg</span> — use the description <span className="text-amber-400 font-semibold">&quot;World Cup - your favourite Cereal&quot;</span></div>
             </div>
 

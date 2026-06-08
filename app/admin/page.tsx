@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { markAsPaid, markAsUnpaid, triggerDraw, resetDraw, updateTeamStage } from '@/lib/actions'
+import { markAsPaid, markAsUnpaid, triggerDraw, resetDraw, updateTeamStage, doublePaidSlots } from '@/lib/actions'
 
 type Participant = {
   user_id: string
@@ -51,7 +51,7 @@ export default async function AdminPage() {
 
   const totalPaid = participants.filter(p => p.is_paid).length
   const totalSlots = participants.reduce((s, p) => s + (p.is_paid ? p.teams_paid : 0), 0)
-  const poolValue = totalSlots * 20
+  const poolValue = totalSlots * 10
 
   // Group teams by group letter
   const groups: Record<string, Team[]> = {}
@@ -137,7 +137,19 @@ export default async function AdminPage() {
 
       {/* Participants */}
       <div className="bg-[#0d1a2d] border border-[#1e3a5f] rounded-2xl p-6 mb-10">
-        <h2 className="text-lg font-bold text-white mb-4">Participants</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-white">Participants</h2>
+          {totalPaid > 0 && !isDrawn && (
+            <form action={doublePaidSlots}>
+              <button
+                type="submit"
+                className="text-xs px-3 py-1.5 rounded-lg bg-purple-900/50 border border-purple-700/50 text-purple-300 hover:bg-purple-800/50 transition-colors cursor-pointer"
+              >
+                ×2 Double Paid Slots
+              </button>
+            </form>
+          )}
+        </div>
 
         {participants.length === 0 ? (
           <p className="text-slate-500 text-sm">No one has registered yet.</p>
@@ -159,7 +171,7 @@ export default async function AdminPage() {
                     <td className="py-3 pr-4 font-semibold text-white">{p.display_name}</td>
                     <td className="py-3 pr-4 text-slate-400 text-xs">{p.email}</td>
                     <td className="py-3 pr-4 text-right text-slate-300">{p.teams_wanted}</td>
-                    <td className="py-3 pr-4 text-right text-amber-400 font-bold">${p.teams_wanted * 20}</td>
+                    <td className="py-3 pr-4 text-right text-amber-400 font-bold">${p.teams_wanted * 10}</td>
                     <td className="py-3 text-right">
                       {p.is_paid ? (
                         <form action={markAsUnpaid} className="inline">
