@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { markAsPaid, markAsUnpaid, triggerDraw, resetDraw, updateTeamStage, doublePaidSlots } from '@/lib/actions'
+import { markAsPaid, markAsUnpaid, triggerDraw, resetDraw, updateTeamStage, doublePaidSlots, adminUpdateSlots } from '@/lib/actions'
 
 type Participant = {
   user_id: string
@@ -170,7 +170,22 @@ export default async function AdminPage() {
                   <tr key={p.user_id} className="group">
                     <td className="py-3 pr-4 font-semibold text-white">{p.display_name}</td>
                     <td className="py-3 pr-4 text-slate-400 text-xs">{p.email}</td>
-                    <td className="py-3 pr-4 text-right text-slate-300">{p.teams_wanted}</td>
+                    <td className="py-3 pr-4 text-right">
+                      <form action={adminUpdateSlots} className="inline-flex items-center gap-1 justify-end">
+                        <input type="hidden" name="user_id" value={p.user_id} />
+                        <input
+                          type="number"
+                          name="slots"
+                          defaultValue={p.teams_wanted}
+                          min={1}
+                          max={20}
+                          className="w-12 bg-[#050a14] border border-[#1e3a5f] rounded px-1.5 py-1 text-white text-xs text-center focus:outline-none focus:border-amber-500/60"
+                        />
+                        <button type="submit" className="text-xs px-2 py-1 rounded bg-[#1e3a5f] hover:bg-[#2a4f7a] text-slate-300 transition-colors cursor-pointer">
+                          ✓
+                        </button>
+                      </form>
+                    </td>
                     <td className="py-3 pr-4 text-right text-amber-400 font-bold">${p.teams_wanted * 10}</td>
                     <td className="py-3 text-right">
                       {p.is_paid ? (

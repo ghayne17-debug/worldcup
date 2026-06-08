@@ -153,6 +153,32 @@ export async function triggerDraw() {
   revalidatePath('/admin')
 }
 
+export async function adminUpdateSlots(formData: FormData) {
+  await assertAdmin()
+  const admin = createAdminClient()
+
+  const userId = formData.get('user_id') as string
+  const slots = Math.max(1, parseInt(formData.get('slots') as string) || 1)
+
+  const { data: participant } = await admin
+    .from('participants')
+    .select('is_paid')
+    .eq('user_id', userId)
+    .single()
+
+  await admin
+    .from('participants')
+    .update({
+      teams_wanted: slots,
+      // if already paid, update teams_paid to match new slot count
+      ...(participant?.is_paid ? { teams_paid: slots } : {}),
+    })
+    .eq('user_id', userId)
+
+  revalidatePath('/admin')
+  revalidatePath('/')
+}
+
 export async function doublePaidSlots() {
   await assertAdmin()
   const admin = createAdminClient()
