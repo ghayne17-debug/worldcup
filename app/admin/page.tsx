@@ -108,23 +108,13 @@ export default async function AdminPage() {
             </form>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex-1">
-              <div className="text-emerald-400 font-bold">✓ Draw Complete</div>
-              {drawConfig?.drawn_at && (
-                <p className="text-slate-500 text-xs mt-1">
-                  {new Date(drawConfig.drawn_at).toLocaleString('en-AU', { dateStyle: 'full', timeStyle: 'short' })}
-                </p>
-              )}
-            </div>
-            <form action={resetDraw}>
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-xl border border-red-800/50 text-red-400 hover:bg-red-950/40 text-sm transition-colors cursor-pointer"
-              >
-                Reset Draw
-              </button>
-            </form>
+          <div>
+            <div className="text-emerald-400 font-bold">✓ Draw Complete</div>
+            {drawConfig?.drawn_at && (
+              <p className="text-slate-500 text-xs mt-1">
+                {new Date(drawConfig.drawn_at).toLocaleString('en-AU', { dateStyle: 'full', timeStyle: 'short' })}
+              </p>
+            )}
           </div>
         )}
       </div>
