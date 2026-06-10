@@ -121,7 +121,6 @@ export default async function AdminPage() {
               <button
                 type="submit"
                 className="px-4 py-2 rounded-xl border border-red-800/50 text-red-400 hover:bg-red-950/40 text-sm transition-colors cursor-pointer"
-                onClick={() => {}}
               >
                 Reset Draw
               </button>
