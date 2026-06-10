@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { markAsPaid, markAsUnpaid, triggerDraw, resetDraw, updateTeamStage, doublePaidSlots, adminUpdateSlots } from '@/lib/actions'
+import { markAsPaid, markAsUnpaid, triggerDraw, resetDraw, adminUpdateSlots } from '@/lib/actions'
 
 type Participant = {
   user_id: string
@@ -27,8 +27,6 @@ type DrawConfig = {
   drawn_at: string | null
 }
 
-const STAGES = ['Group Stage', 'Round of 32', 'Round of 16', 'Quarter-final', 'Semi-final', 'Final', 'Champion!']
-
 export default async function AdminPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -36,16 +34,13 @@ export default async function AdminPage() {
 
   const [
     { data: participantsRaw },
-    { data: teamsRaw },
     { data: drawConfigRaw },
   ] = await Promise.all([
     supabase.from('participants').select('*').order('created_at'),
-    supabase.from('teams').select('*').order('group_name').order('id'),
     supabase.from('draw_config').select('*').single(),
   ])
 
   const participants = (participantsRaw as Participant[]) || []
-  const teams = (teamsRaw as Team[]) || []
   const drawConfig = drawConfigRaw as DrawConfig | null
   const isDrawn = drawConfig?.is_drawn ?? false
 
@@ -53,9 +48,9 @@ export default async function AdminPage() {
   const totalSlots = participants.reduce((s, p) => s + (p.is_paid ? p.teams_paid : 0), 0)
   const poolValue = totalSlots * 10
 
-  // Group teams by group letter
+  // Group teams by group letter (unused after split but kept for type safety)
   const groups: Record<string, Team[]> = {}
-  for (const team of teams) {
+  for (const team of [] as Team[]) {
     if (!groups[team.group_name]) groups[team.group_name] = []
     groups[team.group_name].push(team)
   }
@@ -207,56 +202,18 @@ export default async function AdminPage() {
         )}
       </div>
 
-      {/* Team stage management */}
       {isDrawn && (
-        <div className="bg-[#0d1a2d] border border-[#1e3a5f] rounded-2xl p-6">
-          <h2 className="text-lg font-bold text-white mb-2">Team Progress</h2>
-          <p className="text-slate-500 text-xs mb-6">Update each team&apos;s stage as the tournament progresses.</p>
-
-          {Object.entries(groups)
-            .sort(([a], [b]) => a.localeCompare(b))
-            .map(([group, groupTeams]) => (
-              <div key={group} className="mb-6">
-                <h3 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                  Group {group}
-                </h3>
-                <div className="space-y-2">
-                  {groupTeams.map(team => (
-                    <form key={team.id} action={updateTeamStage} className="flex items-center gap-3">
-                      <input type="hidden" name="team_id" value={team.id} />
-                      <span className="text-xl w-8 shrink-0">{team.flag_emoji}</span>
-                      <span className="text-sm text-white w-40 shrink-0 truncate">{team.name}</span>
-                      <span className="text-xs text-slate-500 w-32 shrink-0 truncate">
-                        {team.owner_name || <span className="italic text-slate-700">Unallocated</span>}
-                      </span>
-                      <select
-                        name="stage"
-                        defaultValue={team.current_stage}
-                        className="bg-[#050a14] border border-[#1e3a5f] rounded-lg px-2 py-1.5 text-white text-xs focus:outline-none focus:border-amber-500/60 cursor-pointer"
-                      >
-                        {STAGES.map(s => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                      <label className="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="is_eliminated"
-                          value="1"
-                          defaultChecked={team.is_eliminated}
-                          className="accent-red-500"
-                        />
-                        Eliminated
-                      </label>
-                      <button
-                        type="submit"
-                        className="px-3 py-1.5 rounded-lg bg-[#1e3a5f] hover:bg-[#2a4f7a] text-white text-xs font-semibold transition-colors cursor-pointer"
-                      >
-                        Save
-                      </button>
-                    </form>
-                  ))}
-                </div>
-              </div>
-            ))}
+        <div className="bg-[#0d1a2d] border border-[#1e3a5f] rounded-2xl p-6 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-white">Team Progress</h2>
+            <p className="text-slate-500 text-xs mt-1">Update stages and eliminations as the tournament progresses.</p>
+          </div>
+          <a
+            href="/admin/teams"
+            className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm transition-colors"
+          >
+            Manage Teams →
+          </a>
         </div>
       )}
     </div>
